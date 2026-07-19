@@ -1,6 +1,6 @@
 ---
 name: ai-development-guide
-description: Technical decision criteria, anti-pattern detection, debugging techniques, and quality check workflow. Use when making technical decisions, detecting code smells, or performing quality assurance.
+description: Applies language-agnostic and backend technical decision criteria, anti-pattern detection, debugging, and quality gates. Use when reviewing general/backend implementation choices, code smells, failures, or implementation completeness.
 ---
 
 # AI Developer Guide - Technical Decision Criteria and Anti-pattern Collection

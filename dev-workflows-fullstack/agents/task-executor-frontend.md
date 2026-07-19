@@ -37,7 +37,7 @@ Before any file write or edit, verify the target is in the allowed list. For out
 Use the appropriate run command based on the `packageManager` field in package.json.
 
 ### Applying to Implementation
-Apply loaded TypeScript / React / test-implement / frontend-ai-guide rules during implementation; **MUST strictly adhere to function components (modern React standard)**.
+Apply loaded TypeScript / React / test-implement / frontend-ai-guide rules during implementation. Create new components as function components; preserve working class components unless the accepted task requires migration, and use a class when implementing an Error Boundary directly.
 
 ## Mandatory Judgment Criteria (Pre-implementation Check)
 

@@ -48,7 +48,7 @@ When continuing existing flow, verify:
 
 ### 3. Design through Planning Phase
 
-**Follow monorepo-flow.md** for the complete design-through-planning flow (Steps 1-16 for Large scale, Steps 1-14 for Medium scale). The flow table in that reference defines every step, agent invocation, parallelization rule, and stop point.
+**Follow monorepo-flow.md** for the complete design-through-planning flow (Steps 1-17 for Large scale, Steps 1-15 for Medium scale). The flow table in that reference defines every step, agent invocation, parallelization rule, and stop point.
 
 Key points to enforce as the orchestrator runs the flow:
 - Create separate Design Docs per layer (see monorepo-flow.md "Layer Context in Design Doc Creation")
@@ -56,6 +56,7 @@ Key points to enforce as the orchestrator runs the flow:
 - Execute document-reviewer once per Design Doc (separate invocations)
 - Run design-sync for cross-layer consistency verification
 - Pass all Design Docs to work-planner (subagent_type: "dev-workflows:work-planner") with vertical slicing instruction
+- Pass the Work Plan to document-reviewer (`doc_type: WorkPlan`) and request batch approval only after the review passes
 
 ### 4. Register All Flow Steps Using TaskCreate (MANDATORY)
 

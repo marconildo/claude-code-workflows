@@ -1,13 +1,22 @@
-# Frontend Test Implementation (RTL + Vitest + MSW)
+# Frontend Test Implementation (React/TypeScript)
 
-## Test Framework
-- **Vitest**: This project uses Vitest
-- **React Testing Library**: For component testing
-- **MSW (Mock Service Worker)**: For API mocking
-- Test imports: `import { describe, it, expect, beforeEach, vi } from 'vitest'`
-- Component test imports: `import { render, screen } from '@testing-library/react'`
-- User interaction: `import userEvent from '@testing-library/user-event'` (prefer over `fireEvent`)
-- Mock creation: Use `vi.mock()`
+## Project Toolchain Resolution
+
+Before writing a test, inspect the package scripts, runner configuration, setup files, existing neighboring tests, DOM/browser environment, and network handlers. Preserve the repository's runner, imports, mock API, setup lifecycle, file naming, and test location.
+
+- Use React Testing Library when it is the project's component-test renderer; prefer `userEvent` over `fireEvent` for user interactions
+- Use the repository's existing network mocking layer for API behavior. When MSW is configured, extend its handlers instead of introducing runner-level fetch mocks
+- When Vitest is configured, use its existing import convention and `vi` APIs. When Jest or another runner is configured, use that runner's established equivalents
+- When multiple approaches coexist, follow the dominant convention in the changed feature area. If no representative convention exists and adding or replacing tooling is outside the approved work, stop and report the missing test-environment decision
+
+### Vitest Mapping (only when Vitest is configured)
+
+- Test imports: `import { describe, it, expect, beforeEach, vi } from 'vitest'`, unless globals are enabled by the existing config
+- Mock creation: use `vi.fn()` and `vi.mock()` following the project's setup and reset conventions
+
+### Jest or Other Runner Mapping
+
+Keep the runner's existing imports or globals, mock factory, module-mocking mechanism, fake-timer behavior, and setup/teardown conventions. Translate the behavior expressed by a skeleton; do not copy Vitest-specific APIs into a different runner.
 
 ## Basic Testing Policy
 
@@ -27,9 +36,9 @@ Test foundational, high-reuse units the hardest — shared components, custom ho
    - Most numerous, implemented with fine granularity
    - Focus on user-observable behavior
 
-2. **Integration Tests (React Testing Library + MSW)**
+2. **Integration Tests (React Testing Library + the project network layer)**
    - Verify coordination between multiple components
-   - Mock APIs with MSW (Mock Service Worker)
+   - Mock APIs with the repository's configured network layer (MSW when present)
    - No actual DB connections (backend manages DB)
    - Verify major functional flows
 
@@ -69,9 +78,9 @@ Test foundational, high-reuse units the hardest — shared components, custom ho
 
 **Recommended: Mock external dependencies in unit tests**
 - Merit: Ensures test independence and reproducibility
-- Practice: Mock API calls with MSW, mock external libraries
+- Practice: Use the configured network layer for API calls and the configured runner's mock API for external libraries
 
-**Use MSW for all API interactions in unit tests**: Ensures speed and environment independence.
+For network behavior, prefer the repository's network-level mock layer over mocking implementation modules. Use MSW when configured; keep direct module mocks for non-network external I/O or when that is the established project convention.
 
 ### Test Failure Response Decision Criteria
 
@@ -159,8 +168,9 @@ expect(screen.getByText('Submitted')).toBeInTheDocument()
 ### Meaningful Assertions
 Every test must include at least one `expect()` that validates observable behavior.
 
-### Appropriate Mock Scope
+### Appropriate Mock Scope (Vitest example)
 Mock only direct external I/O dependencies. Internal utilities should use real implementations.
+With another runner, apply the same boundary using its established module-mocking API.
 ```typescript
 vi.mock('./api/userApi')  // External API - mock
 vi.mock('./lib/database') // External I/O - mock
@@ -169,7 +179,7 @@ vi.mock('./lib/database') // External I/O - mock
 
 ## Mock Type Safety Enforcement
 
-### MSW (Mock Service Worker) Setup
+### MSW Setup (only when MSW is configured)
 ```typescript
 import { http, HttpResponse } from 'msw'
 
@@ -180,7 +190,7 @@ const handlers = [
 ]
 ```
 
-### Component Mock Type Safety
+### Component Mock Type Safety (Vitest example)
 ```typescript
 type TestProps = Pick<ButtonProps, 'label' | 'onClick'>
 const mockProps: TestProps = { label: 'Click', onClick: vi.fn() }
@@ -190,7 +200,9 @@ const mockProps: TestProps = { label: 'Click', onClick: vi.fn() }
 
 Limited to verifying existing feature impact when adding new features. Long-term operations and performance testing are infrastructure responsibilities, not test scope.
 
-## Basic React Testing Library Example
+## Basic React Testing Library Example (Vitest)
+
+Use this mapping only when Vitest is the configured runner. With another runner, preserve the same user-observable assertions while using that runner's imports and mock API.
 
 ```typescript
 import { describe, it, expect, vi } from 'vitest'

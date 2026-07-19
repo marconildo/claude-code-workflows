@@ -361,7 +361,7 @@ Draft each AC value-first, then expand it across requirement boundaries before a
 - Accessibility (keyboard navigation, screen reader support)
 
 **Exclude** (Low ROI in LLM/CI/CD environment):
-- External API real connections → Use MSW for API mocking instead
+- External API real connections → Use the repository's configured network mock layer (MSW when configured)
 - Performance metrics → Non-deterministic in CI environment
 - Implementation details → Focus on user-observable behavior
 - Exact pixel-perfect layout → Focus on content availability, not exact positioning
