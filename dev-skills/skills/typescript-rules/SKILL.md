@@ -17,7 +17,7 @@ Code first: names and types carry meaning; a comment must add what code cannot, 
 
 ## Type Safety
 
-**Default Rule**: Prefer `unknown`, generics, or union types over `any`. Retain `any` only when an existing external, generated, or legacy public signature requires it, or when replacing it prevents the project type check from expressing a safe generic relationship. Record the declaration path or type-check result that proves the constraint. When a local adapter can preserve compatibility and expose a safer type within the accepted scope, implement the adapter; otherwise confine `any` to the smallest adapter or public-signature boundary, document the reason, and validate untrusted data before it enters typed application code.
+**Default Rule**: Prefer `unknown`, generics, or union types over `any`. Retain `any` only when an existing external, generated, or legacy public signature requires it, or when replacing it prevents the project type check from expressing a safe generic relationship. Record the declaration path or type-check result that proves the constraint. When a local adapter can preserve compatibility and expose a safer type within the user request or current task/design artifact, implement the adapter; otherwise confine `any` to the smallest adapter or public-signature boundary, document the reason, and validate untrusted data before it enters typed application code.
 
 **any Type Alternatives (Priority Order)**
 1. **unknown Type + Type Guards**: Use for validating external input (API responses, localStorage, URL parameters)
@@ -63,10 +63,10 @@ Use the following as prompts to review a design, not as pass/fail thresholds. Ex
 ## Coding Conventions
 
 **Component Design Criteria**
-- **Function components for new code**: Prefer function components and Hooks. Preserve working class components unless the accepted scope requires migration; a class component remains valid when implementing an Error Boundary directly
+- **Function components for new code**: Prefer function components and Hooks. Preserve working class components unless the user request or current task/design artifact requires migration; a class component remains valid when implementing an Error Boundary directly
 - **Custom Hooks**: Standard pattern for logic reuse and dependency injection
 - **Component Hierarchy**: Use the project's adopted component architecture. When the project uses Atomic Design: Atoms → Molecules → Organisms → Templates → Pages. When the project uses Feature-based, Container-Presenter, or another structure: follow that structure consistently and document the chosen layering in the project README or design doc
-- **Co-location**: Place tests, styles, and related files alongside components
+- **File placement**: Follow the repository's existing component, test, and style layout. Co-locate related files only when that is the established convention or an approved new structure
 
 **Server/Client Boundary (RSC frameworks only — e.g., Next.js App Router)**
 - Default to server components for data fetching and rendering; isolate interactivity behind a `"use client"` boundary at the smallest scope that needs it

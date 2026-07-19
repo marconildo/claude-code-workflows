@@ -282,7 +282,7 @@ Between tool calls, briefly report: which phase is running, the command executed
   - Optimize images and assets
 - **Structural Issues**
   - Resolve circular dependencies (extract to common modules)
-  - Split large components (300+ lines → smaller components)
+  - For components at 300+ lines, perform the mandatory decomposition review: split independent rendering/state/data/test responsibilities by default; retain a cohesive component only when splitting would add avoidable prop/state synchronization, and record that evidence
   - Refactor deeply nested conditionals
 - **Type Error Fixes**
   - Handle external API responses with unknown type and type guards

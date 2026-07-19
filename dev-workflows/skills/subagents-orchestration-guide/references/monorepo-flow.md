@@ -117,7 +117,7 @@ verification per phase.
 
 work-planner's existing Integration Complete criteria naturally covers cross-layer verification when given multiple Design Docs.
 
-For Medium and Large flows, pass the resulting Work Plan to document-reviewer with `doc_type: WorkPlan`. On `needs_revision`, route the findings to work-planner in update mode and re-review. Request batch approval only after the review is `approved` or `approved_with_conditions`; escalate `rejected` to the user.
+For Medium and Large flows, pass the resulting Work Plan to document-reviewer with `doc_type: WorkPlan`. On `needs_revision`, route the findings to work-planner in update mode and re-review. If the same blocking finding repeats and the update supplies no new evidence or contract change, stop and escalate instead of repeating the loop. Request batch approval only after the review is `approved` or `approved_with_conditions`; escalate `rejected` to the user.
 
 ## Task Decomposition Phase
 

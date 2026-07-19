@@ -26,6 +26,9 @@ The skeleton's `@lane:` annotation declares which lane the test belongs to. Choo
 ## Playwright Test Structure
 
 ### Directory Layout
+
+Preserve the existing harness layout resolved above. Use this layout only when the approved work establishes a new Playwright harness and the repository has no convention:
+
 ```
 tests/
 └── e2e/
@@ -41,15 +44,16 @@ tests/
 ```
 
 ### Naming Conventions
-- fixture-e2e files: `{FeatureName}.fixture.e2e.test.ts`
-- service-integration-e2e files: `{FeatureName}.service.e2e.test.ts`
-- Page objects: `{PageName}.page.ts`
-- Fixtures: `{Purpose}.fixture.ts`
-- Static fixture data: `{scenario}.fixture.json`
+- Preserve existing harness naming. For an approved new Playwright harness, default to:
+  - fixture-e2e files: `{FeatureName}.fixture.e2e.test.ts`
+  - service-integration-e2e files: `{FeatureName}.service.e2e.test.ts`
+  - Page objects: `{PageName}.page.ts`
+  - Fixtures: `{Purpose}.fixture.ts`
+  - Static fixture data: `{scenario}.fixture.json`
 
 ## Page Object Pattern
 
-Encapsulate page interactions for reusability and maintainability:
+Use the repository's existing browser abstraction. When establishing new Playwright tests, introduce a page object when one page/workflow interaction is reused across 3+ tests or a coherent interaction sequence would otherwise be duplicated. Keep direct accessible locators in a small test when an object would only add indirection.
 
 ```typescript
 import { type Page, type Locator } from '@playwright/test'
@@ -233,7 +237,7 @@ Before service-integration-e2e tests can pass, verify:
 - [ ] Environment variables are set (`E2E_*` prefixed)
 - [ ] External services are either available or stubbed
 
-When the work plan includes dedicated environment setup tasks (Phase 0; see the work plan's E2E Environment Prerequisites section), follow those tasks. When no setup tasks exist in the plan, address missing prerequisites as part of the test implementation task itself, OR consider whether the verification could move to fixture-e2e instead.
+When the work plan includes dedicated environment setup tasks, follow those tasks. When a required prerequisite is missing from both the repository and approved plan, stop and report the exact missing environment decision instead of expanding scope implicitly. Move verification to fixture-e2e only when the same proof obligation can be established without the real service; record that lane change in the task/work-plan evidence.
 
 ## Locator Strategy
 

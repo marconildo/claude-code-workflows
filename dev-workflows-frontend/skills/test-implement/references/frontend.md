@@ -44,7 +44,7 @@ Test foundational, high-reuse units the hardest — shared components, custom ho
 
 ## Red-Green-Refactor Process (Test-First Development)
 
-**Recommended Principle**: Always start code changes with tests
+**Recommended Principle**: Start new or changed behavior and reproducible bug fixes with a failing test. For behavior-preserving refactors, establish passing regression evidence before changing code
 
 **Background**:
 - Ensure behavior before changes, prevent regression
@@ -52,14 +52,13 @@ Test foundational, high-reuse units the hardest — shared components, custom ho
 - Ensure safety during refactoring
 
 **Development Steps**:
-1. **Red**: Write test for expected behavior (it fails)
-2. **Green**: Pass test with minimal implementation
-3. **Refactor**: Improve code while maintaining passing tests
+- **New/changed behavior or reproducible bug**: Red (write and confirm a failing test) → Green (minimal implementation) → Refactor
+- **Behavior-preserving refactor**: Baseline (confirm existing tests pass or add passing characterization tests) → Refactor → Verify the same evidence
 
 **NG Cases (Test-first not required)**:
-- Pure configuration file changes (vite.config.ts, tailwind.config.js, etc.)
+- Configuration changes that affect neither runtime nor build behavior; otherwise begin with a failing validator or test check
 - Documentation-only updates (README, comments, etc.)
-- Emergency production incident response (post-incident tests mandatory)
+- Emergency production incident response; afterward add a regression test when reproducible, otherwise record the reproduction blocker and static, contract, or environment evidence
 
 ## Test Design Principles
 
@@ -93,7 +92,7 @@ For network behavior, prefer the repository's network-level mock layer over mock
 ### Decision Criteria
 | Mock Characteristics | Response Policy |
 |---------------------|-----------------|
-| **Simple and stable** | Consolidate in common helpers |
+| **Simple and stable** | Keep local until reuse or a named readability/contract benefit justifies a helper |
 | **Complex or frequently changing** | Individual implementation |
 | **Duplicated in 3+ places** | Consider consolidation |
 | **Test-specific logic** | Individual implementation |
@@ -112,6 +111,9 @@ function renderWithProviders(ui: React.ReactElement) {
 ## Test Implementation Conventions
 
 ### Directory Structure (Co-location Principle)
+
+Preserve the repository location discovered in Project Toolchain Resolution. When the approved work establishes a new component-test convention and no representative layout exists, use this co-located default:
+
 ```
 src/
 └── components/
@@ -122,8 +124,8 @@ src/
 ```
 
 ### Naming Conventions
-- Test files: `{ComponentName}.test.tsx`
-- Integration test files: `{FeatureName}.integration.test.tsx`
+- Test files: preserve the repository pattern; for an approved new convention, default to `{ComponentName}.test.tsx`
+- Integration test files: preserve the repository pattern; for an approved new convention, default to `{FeatureName}.integration.test.tsx`
 - Test suites: Names describing target components or features
 - Test cases: Names describing expected behavior from user perspective
 
@@ -150,7 +152,7 @@ expect(component.state.count).toBe(0)
 ## Test Quality Criteria
 
 ### Literal Expected Values
-Use hardcoded literal values for assertions.
+Use hardcoded literal values by default so the implementation cannot calculate its own oracle. A property, approved snapshot, or fixture-derived expectation may replace a literal only when it is independently derived and makes the intended behavior more explicit.
 ```typescript
 expect(formatPrice(1000)).toBe('¥1,000')
 expect(calculateTax(100)).toBe(10)
